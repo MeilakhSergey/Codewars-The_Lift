@@ -76,7 +76,7 @@ public class Dinglemouse {
             }
 
             for (int i = 0; i < queues[floor].length; i++) {
-                if (peopleInLift.size() == cap) break;
+                if (peopleInLift.values().stream().reduce(0, (a, b) -> a + b) == cap) break;
                 if (queues[floor][i] < 0) continue;
                 if (direction > 0 && queues[floor][i] < floor) break;
                 if (direction < 0 && queues[floor][i] > floor) break;
