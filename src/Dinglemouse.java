@@ -20,7 +20,7 @@ public class Dinglemouse {
                 new int[0], // 5
                 new int[0], // 6
         };
-        final int[] result = Dinglemouse.theLift(queues,5);
+        final int[] result = Dinglemouse.theLift(queues,1);
         System.out.println(result.toString());
 
         final int[][] queues2 = {
@@ -34,6 +34,23 @@ public class Dinglemouse {
         };
         final int[] result2 = Dinglemouse.theLift(queues2,5);
         System.out.println(result2.toString());
+
+        final int[][] queues3 = {
+                new int[0], // G
+                new int[]{6,5,2}, // 1
+                new int[]{4}, // 2
+                new int[0], // 3
+                new int[]{0,0,0}, // 4
+                new int[0], // 5
+                new int[0], // 6
+                new int[]{3,6,4,5,6}, // 7
+                new int[0], // 8
+                new int[]{1,10,2}, // 9
+                new int[]{1,4,3,2}, // 10
+        };
+        final int[] result3 = Dinglemouse.theLift(queues3,5);
+        System.out.println(result3.toString());
+
     }
 
     public static int[] theLift(final int[][] queues, final int capacity) {
@@ -79,11 +96,11 @@ public class Dinglemouse {
     private static void changeFloor() {
         floor += direction;
         if (floor == numberFloors) {
-            floor -= 2;
+            floor -= 1;
             direction *= -1;
         }
         if (floor == -1) {
-            floor = 1;
+            floor = 0;
             direction *= -1;
         }
     }
