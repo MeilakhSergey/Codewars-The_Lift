@@ -14,14 +14,14 @@ public class Dinglemouse {
         final int[][] queues = {
                 new int[0], // G
                 new int[0], // 1
-                new int[]{5,5,5}, // 2
+                new int[]{0,0,0}, // 2
                 new int[0], // 3
-                new int[0], // 4
-                new int[0], // 5
-                new int[0], // 6
+                new int[]{0,0,0,0}, // 4
+                new int[]{0,0,0}, // 5
+                new int[]{0,0,0,0}, // 6
         };
-        final int[] result = Dinglemouse.theLift(queues,1);
-        System.out.println(result.toString());
+        final int[] result = Dinglemouse.theLift(queues,3);
+        System.out.println(Arrays.toString(result));
 
         final int[][] queues2 = {
                 new int[0], // G
@@ -33,7 +33,7 @@ public class Dinglemouse {
                 new int[0], // 6
         };
         final int[] result2 = Dinglemouse.theLift(queues2,5);
-        System.out.println(result2.toString());
+        System.out.println(Arrays.toString(result2));
 
         final int[][] queues3 = {
                 new int[0], // G
@@ -49,7 +49,15 @@ public class Dinglemouse {
                 new int[]{1,4,3,2}, // 10
         };
         final int[] result3 = Dinglemouse.theLift(queues3,5);
-        System.out.println(result3.toString());
+        System.out.println(Arrays.toString(result3));
+
+        final int[][] queues4 = {
+                new int[]{1,2}, // G
+                new int[]{2,0,0,2}, // 1
+                new int[]{1,1,1}, // 2
+        };
+        final int[] result4 = Dinglemouse.theLift(queues4,2);
+        System.out.println(Arrays.toString(result4));
 
     }
 
@@ -76,19 +84,21 @@ public class Dinglemouse {
             }
 
             for (int i = 0; i < queues[floor].length; i++) {
-                if (peopleInLift.values().stream().reduce(0, (a, b) -> a + b) == cap) break;
                 if (queues[floor][i] < 0) continue;
                 if (direction > 0 && queues[floor][i] < floor) break;
                 if (direction < 0 && queues[floor][i] > floor) break;
+                if (liftStops.get(liftStops.size() - 1) != floor) liftStops.add(floor);
+                if (peopleInLift.values().stream().reduce(0, (a, b) -> a + b) == cap) break;
+
                 if (peopleInLift.get(queues[floor][i]) == null)
                     peopleInLift.put(queues[floor][i], 1);
                 else
                     peopleInLift.put(queues[floor][i], peopleInLift.get(queues[floor][i]) + 1);
                 queues[floor][i] = -1;
                 numberPeopleExist[floor]--;
-                if (liftStops.get(liftStops.size() - 1) != floor) liftStops.add(floor);
             }
         }
+
         if (liftStops.get(liftStops.size() - 1) != 0) liftStops.add(0);
         return liftStops.stream().mapToInt(i -> i).toArray();
     }
