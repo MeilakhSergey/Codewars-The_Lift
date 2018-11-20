@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Optional;
 
 public class Dinglemouse {
     private static int cap;                              //=capacity of Lift
@@ -24,15 +23,15 @@ public class Dinglemouse {
         System.out.println(Arrays.toString(result));
 
         final int[][] queues2 = {
-                new int[0], // G
-                new int[0], // 1
+                new int[]{3,2,2}, // G
+                new int[]{2}, // 1
                 new int[]{1,1}, // 2
                 new int[0], // 3
-                new int[0], // 4
+                new int[]{5,5}, // 4
                 new int[0], // 5
-                new int[0], // 6
+                new int[]{3}, // 6
         };
-        final int[] result2 = Dinglemouse.theLift(queues2,5);
+        final int[] result2 = Dinglemouse.theLift(queues2,3);
         System.out.println(Arrays.toString(result2));
 
         final int[][] queues3 = {
@@ -78,25 +77,9 @@ public class Dinglemouse {
         while (Arrays.stream(numberPeopleExist).max().getAsInt() != 0 || peopleInLift.size() > 0) {
             changeFloor();
 
-            if (peopleInLift.get(floor) != null) {
-                peopleInLift.remove(floor);
-                liftStops.add(floor);
-            }
+            leaveLift(liftStops);
 
-            for (int i = 0; i < queues[floor].length; i++) {
-                if (queues[floor][i] < 0) continue;
-                if (direction > 0 && queues[floor][i] < floor) break;
-                if (direction < 0 && queues[floor][i] > floor) break;
-                if (liftStops.get(liftStops.size() - 1) != floor) liftStops.add(floor);
-                if (peopleInLift.values().stream().reduce(0, (a, b) -> a + b) == cap) break;
-
-                if (peopleInLift.get(queues[floor][i]) == null)
-                    peopleInLift.put(queues[floor][i], 1);
-                else
-                    peopleInLift.put(queues[floor][i], peopleInLift.get(queues[floor][i]) + 1);
-                queues[floor][i] = -1;
-                numberPeopleExist[floor]--;
-            }
+            enterLift(queues, liftStops, numberPeopleExist);
         }
 
         if (liftStops.get(liftStops.size() - 1) != 0) liftStops.add(0);
@@ -112,6 +95,30 @@ public class Dinglemouse {
         if (floor == -1) {
             floor = 0;
             direction *= -1;
+        }
+    }
+
+    private static void leaveLift(ArrayList<Integer> liftStops) {
+        if (peopleInLift.get(floor) != null) {
+            peopleInLift.remove(floor);
+            liftStops.add(floor);
+        }
+    }
+
+    private static void enterLift(int[][] queues, ArrayList<Integer> liftStops, int[] numberPeopleExist) {
+        for (int i = 0; i < queues[floor].length; i++) {
+            if (queues[floor][i] < 0) continue;
+            if (direction > 0 && queues[floor][i] < floor) break;
+            if (direction < 0 && queues[floor][i] > floor) break;
+            if (liftStops.get(liftStops.size() - 1) != floor) liftStops.add(floor);
+            if (peopleInLift.values().stream().reduce(0, (a, b) -> a + b) == cap) break;
+
+            if (peopleInLift.get(queues[floor][i]) == null)
+                peopleInLift.put(queues[floor][i], 1);
+            else
+                peopleInLift.put(queues[floor][i], peopleInLift.get(queues[floor][i]) + 1);
+            queues[floor][i] = -1;
+            numberPeopleExist[floor]--;
         }
     }
 }
